@@ -9,3 +9,5 @@ tests/Makefile
 /src/*.o
 /src/mcpp
 /autom4te.cache
+test-Y/a.out
+.vscode/settings.json
