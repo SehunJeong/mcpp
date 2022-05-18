@@ -12,3 +12,7 @@ This is just a github mirror of the original one.
 that fixes the line comment bug when `-C` and `-P` are both used.
 
 (Sehun) Added new option "-Y <file>". The <file> contains a set of include directories.
+
+**Building (Windows)**
+
+Using Developer Command Prompt for VS 2022, type "nmake" in "src" folder.
