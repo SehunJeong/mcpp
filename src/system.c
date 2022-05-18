@@ -141,6 +141,8 @@ static void     parse_env( const char * env);
                 /* Parse environment variables      */
 static void     set_a_dir( const char * dirname);
                 /* Append an include directory      */
+static void     set_a_dir_from_file( const char * dirfilename);
+                /* Append include directories in the file      */
 static char *   norm_dir( const char * dirname, int framework);
                 /* Normalize include directory path */
 static char *   norm_path( const char * dir, const char * fname, int inf
@@ -758,6 +760,10 @@ plus:
             } else {                        /* Not '-' nor a digit  */
                 set_a_dir( mcpp_optarg);    /* User-defined dir     */
             }
+            break;
+        
+        case 'Y':
+                set_a_dir_from_file( mcpp_optarg);
             break;
 
 #if COMPILER == MSC
@@ -1457,6 +1463,7 @@ static void usage(
 #endif
 
 "-I <directory>      Add <directory> to the #include search list.\n",
+"-Y <file>           Add directories listed in the <file> to the #include search list.\n",
 
 #if COMPILER == GNUC
 "-isysroot <dir>     Change root of system header directory to <dir>.\n",
@@ -1641,7 +1648,7 @@ static void set_opt_list(
 
     const char * const *    lp = & list[ 0];
 
-    strcpy( optlist, "23+@:e:h:jkn:o:vzCD:I:KM:NPQS:U:V:W:");
+    strcpy( optlist, "23+@:e:h:jkn:o:vzCD:I:Y:KM:NPQS:U:V:W:");
                                                 /* Default options  */
     while (*lp)
         strcat( optlist, *lp++);
@@ -2356,6 +2363,31 @@ struct hmap_header_map
     /* Strings follow the buckets, at strings_offset.  */
 };
 #endif
+
+static void set_a_dir_from_file(
+    const char *    dirfilename                 /* The file name that contains a set of path-names        */
+)
+{
+    printf("%s\n", dirfilename);
+    FILE * fp;
+    char * line = NULL;
+    size_t len = 0;
+    ssize_t read;
+
+    fp = fopen(dirfilename, "r");
+    if (fp == NULL){
+        mcpp_fputs( "File not available.\n", ERR);
+        longjmp( error_exit, -1);
+    }
+
+    while ((read = getline(&line, &len, fp)) != -1) {
+        set_a_dir( line);
+    }
+
+    fclose(fp);
+    if (line)
+        free(line);
+}
 
 static char *   norm_dir(
     const char *    dirname,        /* Directory path to normalize  */
