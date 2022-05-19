@@ -11,3 +11,5 @@ tests/Makefile
 /autom4te.cache
 test-Y/a.out
 .vscode/settings.json
+/src/*.obj
+/.vscode/*

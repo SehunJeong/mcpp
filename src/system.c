@@ -2314,6 +2314,7 @@ static void set_a_dir(
     if (dirname == NULL)
         return;                     /* Only to initialize incdir[]  */
     norm_name = norm_dir( dirname, FALSE);
+    
     if (! norm_name)                        /* Non-existent         */
         return;
     for (ip = incdir; ip < incend; ip++) {
@@ -2418,7 +2419,6 @@ static void set_a_dir_from_file(
     const char *    dirfilename                 /* The file name that contains a set of path-names        */
 )
 {
-    printf("%s\n", dirfilename);
     FILE * fp;
     char * line = NULL;
     size_t len = 0;
@@ -2431,8 +2431,10 @@ static void set_a_dir_from_file(
     }
 
     while ((read = getline(&line, &len, fp)) != -1) {
-        if (read > 0)
+        if (read > 0){
+            line[read-1] = '\0';
             set_a_dir( line);
+        }
     }
 
     fclose(fp);
