@@ -2431,7 +2431,8 @@ static void set_a_dir_from_file(
     }
 
     while ((read = getline(&line, &len, fp)) != -1) {
-        set_a_dir( line);
+        if (read > 0)
+            set_a_dir( line);
     }
 
     fclose(fp);
